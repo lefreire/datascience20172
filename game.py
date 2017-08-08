@@ -58,7 +58,7 @@ for character in range(0, len(books_appearance)):
 			#if the character appears in the first book, it needs to be older than the character that appears in the last book
 			#because of this, each book has weight, the first book has weight 5 and the last, 1
 			#the first appearance of each character has value depending on the book weight 
-			life_time = life_time + [(book+1)*(5-book)]
+			life_time = life_time + [(5-book)]
 			break
 
 print life_time
