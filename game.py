@@ -56,19 +56,14 @@ for i in range(0, len(books_appearance)):
 		max_chapters[book_death[i] -1] = max(max_chapters[book_death[i] -1], death_chapter[i])
 
 #checking if is ok
-print "chapter_intro"
-print chapter_intro
-print "book_death"
-print book_death
-print "death_chapter"
-print death_chapter
-print "books_appearance"
-print books_appearance
-print "book_intro"
-print book_intro
-print max_chapters
+print "chapter_intro: ", chapter_intro
+print "book_death: ", book_death
+print "death_chapter: ", death_chapter
+print "books_appearance: ", books_appearance
+print "book_intro: ", book_intro
+print "max_chapters: ", max_chapters
 
-print data.head()
+print "data.head(): ", data.head()
 
 cont_deaths = 0
 #calculating the life time of each character
@@ -78,8 +73,13 @@ for character in range(0, len(books_appearance)):
 	#if the character died, it is calculated differently
 	if book_death[character]:
 		cont_deaths += 1
-		temp = 1 - chapter_intro[character]/float(max_chapters[book_intro[character] -1]) + death_chapter[character]/float(max_chapters[book_death[character] -1]) + book_death[character] - book_intro[character] -1
-		total = book_death[character] -1 + death_chapter[character]/float(max_chapters[book_death[character] -1])
+		#calculating the life and death time of each character
+		life_percentage = chapter_intro[character]/float(max_chapters[book_intro[character] -1])
+		death_percentage = death_chapter[character]/float(max_chapters[book_death[character] -1])
+		book_difference = book_death[character] - book_intro[character]
+		temp = 1 - life_percentage + death_percentage + book_difference -1
+		#"age" of each character in death
+		total = book_death[character] -1 + death_percentage
 		try:
 			temp = temp/total
 		except:
@@ -88,44 +88,21 @@ for character in range(0, len(books_appearance)):
 			print data["Death Chapter"][character]
 			print data["Book Intro Chapter"][character]
 			temp = 0	
-		# if temp < 0:
-		# 	print data["Name"][character]
-		# 	print data["Book of Death"][character]
-		# 	print data["Death Chapter"][character]
-		# 	print data["Book Intro Chapter"][character]
 		life_time[character] = temp
+    #if character is still alive
 	else:
 		temp = float(chapter_intro[character])/max_chapters[book_intro[character] -1] + 5 - book_intro[character]
-		# if temp < 0:
-		# 	print data["Name"][character]
-		# 	print data["Book of Death"][character]
-		# 	print data["Death Chapter"][character]
-		# 	print data["Book Intro Chapter"][character]
 		life_time[character] = temp
 
-	# for book in range(0, len(books_appearance[character])):
-	#calculating his life time
-	#if the character appears in the first book, it needs to be older than the character that appears in the last book
-	#because of this, each book has weight, the first book has weight 5 and the last, 1
-	#the first appearance of each character has value depending on the book weight
-	# 	#taking the first appearance of each character
-	# 	if books_appearance[character][book] == 1:
-	# 		first_appearance = True
-			
-	# 		try:
-	# 			temp_a = chapter_intro[character]/max_chapters[]
-	# 		except Exception:
-	# 			temp_a = 
-	# 		life_time = life_time + [(5 - book) + (chapter_intro[character]/max_chapters[] + chap_death[character]/max_chapters[book_death[character]]]
-	# 		break
-
-print life_time
+# print life_time
 
 #building the graph
 #life: the closer to 1, the earlier the character was introduced in the series
 #chapter: the closer to 1, the later the character died in the book 
-axisx = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
-axisy = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
+# axisx = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
+# axisy = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
+axisx = [1.00 for x in range(0, len(death_chapter))]
+axisy = [1.00 for x in range(0, len(death_chapter))]
 for i in xrange(0, len(life_time)):
 	if book_death[i]:
 		axisx[i] = life_time[i]
@@ -141,11 +118,11 @@ print axisx
 print "Y"
 print axisy
 
-# heatmap, xedges, yedges = np.histogram2d(axisx, axisy, bins = 50)
-# im = plt.imshow(heatmap, cmap = 'hot', interpolation = 'nearest')
-# plt.gca().invert_yaxis()
-# plt.colorbar(im)
-# plt.show()
-
-plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
+heatmap, xedges, yedges = np.histogram2d(axisx, axisy)
+im = plt.imshow(heatmap, cmap = 'pink', interpolation = 'nearest')
+plt.gca().invert_yaxis()
+plt.colorbar(im)
 plt.show()
+
+# plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
+# plt.show()
