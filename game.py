@@ -70,20 +70,38 @@ print max_chapters
 
 print data.head()
 
+cont_deaths = 0
 #calculating the life time of each character
-life_time = []
+life_time = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
 #see every character in the data
 for character in range(0, len(books_appearance)):
 	#if the character died, it is calculated differently
 	if book_death[character]:
-		print data["Name"][character]
-		print max_chapters[book_intro[character] -1]
-		print max_chapters[book_death[character] -1]
-		print chapter_intro[character]/max_chapters[book_intro[character] -1]
-		print chap_death[character]/max_chapters[book_death[character] - 1]
-		life_time = life_time + [1 - chapter_intro[character]/max_chapters[book_intro[character] -1] + chap_death[character]/max_chapters[book_death[character] 	 -1] + book_death[character] - book_intro[character] -1]
+		cont_deaths += 1
+		temp = 1 - chapter_intro[character]/float(max_chapters[book_intro[character] -1]) + death_chapter[character]/float(max_chapters[book_death[character] -1]) + book_death[character] - book_intro[character] -1
+		total = book_death[character] -1 + death_chapter[character]/float(max_chapters[book_death[character] -1])
+		try:
+			temp = temp/total
+		except:
+			print data["Name"][character]
+			print data["Book of Death"][character]
+			print data["Death Chapter"][character]
+			print data["Book Intro Chapter"][character]
+			temp = 0	
+		# if temp < 0:
+		# 	print data["Name"][character]
+		# 	print data["Book of Death"][character]
+		# 	print data["Death Chapter"][character]
+		# 	print data["Book Intro Chapter"][character]
+		life_time[character] = temp
 	else:
-		life_time = life_time + [chapter_intro[character]/max_chapters[book_intro[character] -1] + 5 - book_intro[character]]
+		temp = float(chapter_intro[character])/max_chapters[book_intro[character] -1] + 5 - book_intro[character]
+		# if temp < 0:
+		# 	print data["Name"][character]
+		# 	print data["Book of Death"][character]
+		# 	print data["Death Chapter"][character]
+		# 	print data["Book Intro Chapter"][character]
+		life_time[character] = temp
 
 	# for book in range(0, len(books_appearance[character])):
 	#calculating his life time
@@ -102,3 +120,32 @@ for character in range(0, len(books_appearance)):
 	# 		break
 
 print life_time
+
+#building the graph
+#life: the closer to 1, the earlier the character was introduced in the series
+#chapter: the closer to 1, the later the character died in the book 
+axisx = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
+axisy = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
+for i in xrange(0, len(life_time)):
+	if book_death[i]:
+		axisx[i] = life_time[i]
+		if life_time[i] > 0.9:
+			print "life"
+			print data["Name"][i]
+		axisy[i] = float(death_chapter[i])/max_chapters[book_death[i] -1]
+		if axisy[i] > 0.9:
+			print "chapter"
+			print data["Name"][i]
+print "X"
+print axisx
+print "Y"
+print axisy
+
+# heatmap, xedges, yedges = np.histogram2d(axisx, axisy, bins = 50)
+# im = plt.imshow(heatmap, cmap = 'hot', interpolation = 'nearest')
+# plt.gca().invert_yaxis()
+# plt.colorbar(im)
+# plt.show()
+
+plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
+plt.show()
