@@ -122,6 +122,11 @@ heatmap, xedges, yedges = np.histogram2d(axisx, axisy)
 im = plt.imshow(heatmap, cmap = 'pink', interpolation = 'nearest')
 plt.gca().invert_yaxis()
 plt.colorbar(im)
+
+plt.xlabel('~insert here something about x axis~')
+plt.ylabel('~insert here something about y axis~')
+plt.title('Game of Thrones something', bbox={'facecolor': '0.8', 'pad': 5})
+
 plt.show()
 
 # plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
