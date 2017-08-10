@@ -74,10 +74,18 @@ for character in range(0, len(books_appearance)):
 	if book_death[character]:
 		cont_deaths += 1
 		#calculating the life and death time of each character
-		life_percentage = chapter_intro[character]/float(max_chapters[book_intro[character] -1])
 		death_percentage = death_chapter[character]/float(max_chapters[book_death[character] -1])
-		book_difference = book_death[character] - book_intro[character]
-		temp = 1 - life_percentage + death_percentage + book_difference -1
+		if book_death[character] == book_intro[character]:
+			print data["Name"][character]
+			print book_death[character]
+			print book_intro[character]
+			#introduced and died in the same book
+			life_percentage = (death_chapter[character] - chapter_intro[character])/float(max_chapters[book_intro[character] -1])
+			temp = life_percentage
+		else:
+			life_percentage = 1 - chapter_intro[character]/float(max_chapters[book_intro[character] -1])
+			book_difference = book_death[character] - book_intro[character] -1
+			temp = life_percentage + death_percentage + book_difference
 		#"age" of each character in death
 		total = book_death[character] -1 + death_percentage
 		try:
@@ -91,8 +99,8 @@ for character in range(0, len(books_appearance)):
 		life_time[character] = temp
     #if character is still alive
 	else:
-		temp = float(chapter_intro[character])/max_chapters[book_intro[character] -1] + 5 - book_intro[character]
-		life_time[character] = temp
+		#temp = float(chapter_intro[character])/max_chapters[book_intro[character] -1] + 5 - book_intro[character]
+		life_time[character] = -99
 
 # print life_time
 
@@ -101,33 +109,44 @@ for character in range(0, len(books_appearance)):
 #chapter: the closer to 1, the later the character died in the book 
 # axisx = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
 # axisy = [format(1.00, '.2f') for x in range(0, len(death_chapter))]
-axisx = [1.00 for x in range(0, len(death_chapter))]
-axisy = [1.00 for x in range(0, len(death_chapter))]
+position = 0
+axisx = [1.00 for x in range(0, cont_deaths -1)]
+axisy = [1.00 for x in range(0, cont_deaths -1)]
 for i in xrange(0, len(life_time)):
 	if book_death[i]:
-		axisx[i] = life_time[i]
-		if life_time[i] > 0.9:
-			print "life"
+		if life_time[i] < 0:
+			print life_time[i]
+			continue
+		axisx[position] = life_time[i]
+		if life_time[i] < 0.01:
+			print "low life"
 			print data["Name"][i]
-		axisy[i] = float(death_chapter[i])/max_chapters[book_death[i] -1]
-		if axisy[i] > 0.9:
-			print "chapter"
+		axisy[position] = float(death_chapter[i])/max_chapters[book_death[i] -1]
+		if axisy[position] > 0.9:
+			print "advanced chapter"
 			print data["Name"][i]
+		position += 1
 print "X"
 print axisx
 print "Y"
 print axisy
+print position
+print cont_deaths
 
-heatmap, xedges, yedges = np.histogram2d(axisx, axisy)
-im = plt.imshow(heatmap, cmap = 'pink', interpolation = 'nearest')
-plt.gca().invert_yaxis()
-plt.colorbar(im)
+# plt.plot(axisx, axisy)
+# plt.show()
 
-plt.xlabel('~insert here something about x axis~')
-plt.ylabel('~insert here something about y axis~')
-plt.title('Game of Thrones something', bbox={'facecolor': '0.8', 'pad': 5})
+# heatmap, xedges, yedges = np.histogram2d(axisx, axisy)
+# im = plt.imshow(heatmap, cmap = 'pink', interpolation = 'nearest')
+# plt.gca().invert_yaxis()
+# plt.colorbar(im)
+
+plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
+
+#if using heatmap, switch y and x labels
+plt.ylabel('death_chapter')
+plt.xlabel('life_time')
+plt.title('Game of Thrones deaths', bbox={'facecolor': '0.8', 'pad': 5})
+
 
 plt.show()
-
-# plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
-# plt.show()
