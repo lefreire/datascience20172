@@ -141,12 +141,12 @@ print cont_deaths
 # plt.gca().invert_yaxis()
 # plt.colorbar(im)
 
-plt.scatter(axisx, axisy, s=80, facecolors = 'none', edgecolors = 'r')
+plt.scatter(axisx, axisy, s=100,linewidths=2, facecolors = 'none', edgecolors = 'r')
 
 #if using heatmap, switch y and x labels
 plt.ylabel('death_chapter')
 plt.xlabel('life_time')
-plt.title('Game of Thrones deaths', bbox={'facecolor': '0.8', 'pad': 5})
+plt.title('Game of Thrones Deaths', bbox={'facecolor': '0.8', 'pad': 5})
 
 
 plt.show()
