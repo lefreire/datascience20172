@@ -60,14 +60,32 @@ for i in range(len(new_aux_b)):
 
 T = yes_a + yes_b + no_a+ no_b
 
+print "yes a: ", yes_a
+print "yes b: ", yes_b
+print "no a: ", no_a
+print "no b: ", no_b
+
+
 grupo1_a = ((yes_a + yes_b) * (yes_a+no_a)) / T
 grupo2_a =  ((yes_a + yes_b) * (yes_b + no_b))/T
 grupo1_b = ((no_a + no_b) * (yes_a + no_a))/T
 grupo2_b = ((no_a + no_b)* (yes_b + no_b))/T
 
+print "grupo1_a: ", grupo1_a
+print "grupo2_a: ", grupo2_a
+print "grupo1_b: ", grupo1_b
+print "grupo2_b: ", grupo2_b
+
 chi_1_1 = ((yes_a - grupo1_a) ** 2)/grupo1_a
-chi_1_2 = ((no_a - grupo2_a) ** 2)/grupo2_a
-chi_2_1 = ((yes_b - grupo1_b) ** 2)/grupo1_b
+chi_1_2 = ((no_a - grupo1_b) ** 2)/grupo1_b
+chi_2_1 = ((yes_b - grupo2_a) ** 2)/grupo2_a
 chi_2_2 = ((no_b - grupo2_b) ** 2)/grupo2_b
 
+print chi_1_1
+print chi_1_2
+print chi_2_1
+print chi_2_2
+
 soma = chi_1_1 + chi_1_2 + chi_2_1 + chi_2_2
+
+print "qui quadrado: ", soma
